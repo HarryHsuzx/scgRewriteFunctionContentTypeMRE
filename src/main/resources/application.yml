@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: gateway
+  codec:
+    max-in-memory-size: 2MB
+  cloud:
+    gateway:
+      httpclient:
+        wiretap: true
+      httpserver:
+        wiretap: true
+      routes:
+        - id: API_debug1
+          uri: http://127.0.0.1:8080/
+          filters:
+            - SecureHttpPostSign=demo, DEMO1
+            - RewritePath=/api/debug, /
+          predicates:
+            - Path=/api/debug1/**
+        - id: API_debug2
+          uri: http://127.0.0.1:8080/
+          filters:
+#            - SecureHttpPostSign=demo, DEMO2
+            - RewritePath=/api/debug, /
+          predicates:
+            - Path=/api/debug2/**
+logging:
+  level:
+    root: WARN
+    reactor.netty.http.client.HttpClient: TRACE
+    reactor.netty.http.server.HttpServer: TRACE
